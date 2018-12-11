@@ -66,22 +66,15 @@ class SingleMovie extends Component {
   };
 
   componentDidMount() {
-    this.getTrailer(this.props.match.params.id);
     const {
-      //id,
+      id,
       title,
-      poster_path,
-      runtime,
-      release_date,
-      overview
     } = this.props.match.params;
+    this.getTrailer(id);
 
     this.setState({
+      id,
       title,
-      poster_path,
-      runtime,
-      release_date,
-      overview
     });
   }
 
@@ -121,12 +114,8 @@ class SingleMovie extends Component {
     //console.log(this.props);
     const { imageBaseURL, imageSize, trailerLink } = this.state;
     const {
-      //id,
       title,
-      poster_path,
-      runtime,
-      release_date,
-      overview
+      id,
     } = this.props.match.params;
 
     return (
@@ -154,7 +143,7 @@ class SingleMovie extends Component {
               )}
             </div>
 
-            <div className="row text-white mt-5">
+            {/* <div className="row text-white mt-5">
               <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2">
                 <img
                   src={`${imageBaseURL}${imageSize}${poster_path}`}
@@ -217,9 +206,9 @@ class SingleMovie extends Component {
                   </span>
                 </p>
               </div>
-            </div>
+            </div> */}
 
-            <div className="row my-5">
+            {/* <div className="row my-5">
               <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 mx-auto">
                 <form className="form" onSubmit={this.sendToBookingPage}>
                   <div className="form-group">
@@ -281,7 +270,9 @@ class SingleMovie extends Component {
                   />
                 </form>
               </div>
-            </div>
+            </div> */}
+
+
           </div>
         </header>
       </>
