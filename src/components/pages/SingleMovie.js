@@ -4,6 +4,7 @@ import axios from "axios";
 import VideoFrame from "../VideoFrame";
 // import { Redirect, history } from "react-router-dom";
 import PaystackButton from "react-paystack";
+import { Consumer } from "../../Context";
 
 class SingleMovie extends Component {
   constructor(props) {
@@ -23,7 +24,9 @@ class SingleMovie extends Component {
       poster_path: "",
       runtime: "",
       release_date: "",
-      overview: ""
+      overview: "",
+      movie: "",
+      index: null
     };
   }
 
@@ -66,15 +69,13 @@ class SingleMovie extends Component {
   };
 
   componentDidMount() {
-    const {
-      id,
-      title,
-    } = this.props.match.params;
+    const { id, title, index } = this.props.match.params;
     this.getTrailer(id);
 
     this.setState({
       id,
       title,
+      index
     });
   }
 
@@ -102,21 +103,53 @@ class SingleMovie extends Component {
     });
   };
 
-  sendToBookingPage = e => {
-    e.preventDefault();
-    const { prefferedDate, prefferedTime, title, runtime } = this.state;
-    this.props.history.push(
-      `/movie/${title}/${prefferedDate}/${prefferedTime}/${runtime}/book`
-    );
+  sendToBookingPage = (dispatch, movie, index) => {
+    return event => {
+      event.preventDefault();
+
+      const title = String(movie.title)
+        .toLowerCase()
+        .split(" ")
+        .join("-");
+      const { prefferedDate, prefferedTime } = this.state;
+      const editMovie = {
+        ...movie,
+        booked: { preffered_date: prefferedDate, preffered_time: prefferedTime }
+      };
+      localStorage.setItem(movie.id, JSON.stringify({prefferedDate, prefferedTime}));
+      dispatch({
+        type: "SET_CURRENT_MOVIE",
+        payload: editMovie
+      });
+      this.props.history.push(`/movie/${title}/${movie.id}/${index}/book`);
+    };
+  };
+
+  findMovieById = movies => {
+    const { id, title } = this.state;
+    let movie = {};
+
+    const allMovies = [...movies];
+    setTimeout(() => {
+      allMovies.forEach(m => {
+        //console.log(m.id, parseInt(id))
+        if (m.id === id) {
+          movie = { ...m };
+        }
+      });
+    }, 3000);
+
+    return {
+      id,
+      title,
+      movie
+    };
   };
 
   render() {
     //console.log(this.props);
     const { imageBaseURL, imageSize, trailerLink } = this.state;
-    const {
-      title,
-      id,
-    } = this.props.match.params;
+    const { title, id } = this.props.match.params;
 
     return (
       <>
@@ -143,70 +176,161 @@ class SingleMovie extends Component {
               )}
             </div>
 
-            {/* <div className="row text-white mt-5">
-              <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                <img
-                  src={`${imageBaseURL}${imageSize}${poster_path}`}
-                  alt={title}
-                  style={{ borderRadius: "10px" }}
-                  className="img-responsive mx-auto d-block text-center w-100"
-                />
-              </div>
-              <div className="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-                <h3 className="text-white">{title}</h3>
+            <Consumer>
+              {value => {
+                const { imageBaseURL, imageSize, dispatch } = value;
+                const movie = value.movies[this.props.match.params.index];
 
-                <p
-                  className="lead text-white"
-                  style={{ fontSize: "1rem", fontWeight: 500 }}
-                >
-                  {" "}
-                  <span
-                    style={{
-                      color: "#ccc",
-                      fontWeight: 400,
-                      fontSize: "0.95rem"
-                    }}
-                  >
-                    {overview}
-                  </span>
-                </p>
+                return (
+                  <div className="content">
+                    {movie !== undefined ? (
+                      <div className="content_movie-info">
+                        <div className="row text-white mt-5">
+                          <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                            <img
+                              src={`${imageBaseURL}${imageSize}${
+                                movie.poster_path
+                              }`}
+                              alt={movie.title}
+                              style={{ borderRadius: "10px" }}
+                              className="img-responsive mx-auto d-block text-center w-100"
+                            />
+                          </div>
+                          <div className="col-xs-12 col-sm-10 col-md-10 col-lg-10">
+                            <h3 className="text-white">{movie.title}</h3>
 
-                <p
-                  className="lead text-white"
-                  style={{ fontSize: "1rem", fontWeight: 500 }}
-                >
-                  {" "}
-                  Release Date
-                  <br />
-                  <span
-                    style={{
-                      color: "#ccc",
-                      fontWeight: 400,
-                      fontSize: "0.95rem"
-                    }}
-                  >
-                    {format(release_date, "DD MMMM YYYY")}
-                  </span>
-                </p>
+                            <p
+                              className="lead text-white"
+                              style={{ fontSize: "1rem", fontWeight: 500 }}
+                            >
+                              {" "}
+                              <span
+                                style={{
+                                  color: "#ccc",
+                                  fontWeight: 400,
+                                  fontSize: "0.95rem"
+                                }}
+                              >
+                                {movie.overview}
+                              </span>
+                            </p>
 
-                <p
-                  className="lead text-white"
-                  style={{ fontSize: "1rem", fontWeight: 500 }}
-                >
-                  Runtime
-                  <br />
-                  <span
-                    style={{
-                      color: "#ccc",
-                      fontWeight: 400,
-                      fontSize: "0.95rem"
-                    }}
-                  >
-                    {this.minuteToHour(runtime)}
-                  </span>
-                </p>
-              </div>
-            </div> */}
+                            <p
+                              className="lead text-white"
+                              style={{ fontSize: "1rem", fontWeight: 500 }}
+                            >
+                              {" "}
+                              Release Date
+                              <br />
+                              <span
+                                style={{
+                                  color: "#ccc",
+                                  fontWeight: 400,
+                                  fontSize: "0.95rem"
+                                }}
+                              >
+                                {format(movie.release_date, "DD MMMM YYYY")}
+                              </span>
+                            </p>
+
+                            <p
+                              className="lead text-white"
+                              style={{ fontSize: "1rem", fontWeight: 500 }}
+                            >
+                              Runtime
+                              <br />
+                              <span
+                                style={{
+                                  color: "#ccc",
+                                  fontWeight: 400,
+                                  fontSize: "0.95rem"
+                                }}
+                              >
+                                {this.minuteToHour(movie.runtime)}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                        <div className="row my-5">
+                          <div className="col-xs-12 col-sm-12 col-md-8 col-lg-8 mx-auto">
+                            <form
+                              className="form"
+                              onSubmit={this.sendToBookingPage(
+                                dispatch,
+                                movie,
+                                this.props.match.params.index
+                              )}
+                            >
+                              <div className="form-group">
+                                <label
+                                  htmlFor="exampleFormControlSelect1"
+                                  style={{
+                                    color: "#ccc",
+                                    fontWeight: 400,
+                                    fontSize: "1rem"
+                                  }}
+                                >
+                                  Choose a preffered date
+                                </label>
+                                <select
+                                  className="form-control form-control-lg"
+                                  id="exampleFormControlSelect1"
+                                  name="prefferedDate"
+                                  onChange={this.onInputChange}
+                                  required
+                                >
+                                  <option>Choose a preffered date</option>
+                                  <option>Sat, 08 Dec</option>
+                                  <option>Sat, 08 Dec</option>
+                                  <option>Sun, 09 Dec</option>
+                                  <option>Mon, 10 Dec</option>
+                                  <option>Tue, 11 Dec</option>
+                                  <option>Wed, 12 Dec</option>
+                                </select>
+                              </div>
+
+                              <div className="form-group">
+                                <label
+                                  htmlFor="exampleFormControlSelect1"
+                                  style={{
+                                    color: "#ccc",
+                                    fontWeight: 400,
+                                    fontSize: "1rem"
+                                  }}
+                                >
+                                  Choose a preffered time
+                                </label>
+                                <select
+                                  className="form-control form-control-lg"
+                                  id="exampleFormControlSelect1"
+                                  name="prefferedTime"
+                                  onChange={this.onInputChange}
+                                  required
+                                >
+                                  <option>Choose a preffered time</option>
+                                  <option>5:10 PM</option>
+                                  <option>9:50 PM</option>
+                                </select>
+                              </div>
+                              <input
+                                type="submit"
+                                value="Continue"
+                                className="btn btn-danger btn-lg btn-block"
+                                onClick={this.sendToBookingPage}
+                              />
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="lead text-white mx-auto text-center">
+                        LOADING...
+                      </p>
+                    )}
+                  </div>
+                );
+              }}
+            </Consumer>
 
             {/* <div className="row my-5">
               <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 mx-auto">
@@ -271,8 +395,6 @@ class SingleMovie extends Component {
                 </form>
               </div>
             </div> */}
-
-
           </div>
         </header>
       </>

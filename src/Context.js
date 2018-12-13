@@ -20,6 +20,7 @@ export class AppProvider extends Component {
       isLoading: true,
       trailerLink: null,
       count: 0,
+      currentMovie: {},
       dispatch: action => this.setState(state => reducer(state, action))
     };
   }
@@ -52,7 +53,7 @@ export class AppProvider extends Component {
     axios
       .get(apiUrl)
       .then(res => {
-        console.log(`DISPATCHING FIRST REQUEST...`);
+        //console.log(`DISPATCHING FIRST REQUEST...`);
         const data = res.data;
         let newMovies = data.results;
         totalPages = data.total_pages;
@@ -70,7 +71,7 @@ export class AppProvider extends Component {
                 type: "FETCHED",
                 payload: "FETCHED"
               });
-              console.log(`DISPATCHING SECOND REQUEST...`);
+              //console.log(`DISPATCHING SECOND REQUEST...`);
               const movieData = response.data;
               const runtime = movieData.runtime;
               const genres = movieData.genres;
@@ -81,10 +82,10 @@ export class AppProvider extends Component {
 
               popularMovies.push(movieObj);
 
-              if (this.state.status === 'FETCHED') {
+              //if (this.state.status === 'FETCHED') {
 
-                console.log(`DISPATCHING THIRD REQUEST...COMPLETE`);
-                console.log(this.state)
+                //console.log(`DISPATCHING THIRD REQUEST...COMPLETE`);
+                //console.log(this.state)
 
                 this.setState(
                   {
@@ -93,11 +94,11 @@ export class AppProvider extends Component {
                     movies: popularMovies
                   },
                   () => {
-                    console.log(`DISPATCHING THIRD REQUEST...COMPLETE`);
-                    console.log(this.state)
+                    //console.log(`DISPATCHING THIRD REQUEST...COMPLETE`);
+                    //console.log(this.state)
                   }
                 );
-              }
+              //}
 
             });
         });

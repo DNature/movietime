@@ -16,12 +16,12 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route
-                path="/movie/:title/:id/view"
+                path="/movie/:title/:id/:index/view"
                 component={SingleMovie}
               />
               <Route
                 exact
-                path="/movie/:title/:prefferedDate/:prefferedTime/:runtime/book"
+                path="/movie/:title/:id/:index/book"
                 component={Booking}
                 />
             </Switch>

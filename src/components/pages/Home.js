@@ -107,7 +107,7 @@ class Home extends Component {
                   <div className="container">
                     <div className="row">
                       {movies.length > 0 ? (
-                        movies.map(movie => (
+                        movies.map((movie, index) => (
                           <div className="col-12" key={movie.id}>
                             <div
                               className="row mb-3"
@@ -132,7 +132,9 @@ class Home extends Component {
                                   ))}
                                 </h6>
                                 <Link
-                                  to={`/view/${movie.id}`}
+                                  to={`/movie/${movie.title}/${
+                                    movie.id
+                                    }/view`}
                                   className="h3 text-white movie-link"
                                   style={{
                                     textDecoration: "none"
@@ -173,9 +175,9 @@ class Home extends Component {
                                     WATCH TRAILER
                                   </button>
                                   <Link
-                                    to={`/movie/${movie.title}/${
+                                    to={`/movie/${String(movie.title).toLowerCase().split(" ").join("-")}/${
                                       movie.id
-                                    }/view`}
+                                    }/${index}/view`}
                                     className="btn btn-outline-danger float-right"
                                   >
                                     BOOK NOW

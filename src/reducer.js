@@ -15,6 +15,11 @@ export const reducer = (state, action) => {
         ...state,
         trailerLink: action.payload
       };
+    case "SET_CURRENT_MOVIE":
+      return {
+        ...state,
+        currentMovie: {...action.payload}
+      }
     default:
       return state;
   }
