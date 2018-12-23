@@ -75,7 +75,7 @@ class Booking extends Component {
       event.preventDefault();
       axios({
         method: "post",
-        url: "http://localhost:5000/api/movies/create",
+        url: "/api/movies/create",
         data: {
           title,
           id,
@@ -88,7 +88,7 @@ class Booking extends Component {
             const { firstname, lastname, email, phone } = this.state;
             return axios({
               method: "post",
-              url: "http://localhost:5000/api/users/create",
+              url: "/api/users/create",
               data: {
                 firstname,
                 lastname,

@@ -7,10 +7,40 @@ const User = require("../../models/User");
 const totalSeats = 500;
 let currentSeat = 1;
 
+
+
+async function getSeatNumbers() {
+  let data = {
+    users: [],
+    errors: []
+  }
+
+  router.get('/', async (req, res) => {
+    User.find({})
+      .then(async user => {
+         data.users = await [...users, user]
+      })
+      .catch(async err => {
+         data.errors = await [...errors, err]
+      })
+  });
+  return await data
+}
+
 // @route   POST api/users/register
 // @desc    Register user
 // @access  Public
 router.post("/create", (req, res) => {
+  // const seats = [
+  //   [1],
+  //   [2, 3, 4],
+  //   [5, 6]
+  // ]
+  // res.send({
+  //   seats: s
+  // })
+
+
   const {
     firstname,
     lastname,

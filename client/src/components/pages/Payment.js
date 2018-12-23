@@ -45,7 +45,7 @@ class Payment extends Component {
     if(response.status === "success") {
       axios({
         method: "patch",
-        url: `http://localhost:5000/api/users/update/${this.state.currentUser._id}`,
+        url: `/api/users/update/${this.state.currentUser._id}`,
         data: {
           reference: response.trxref
         }

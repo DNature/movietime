@@ -4,9 +4,8 @@
   "description": "Book movie tickets fast and easy",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "client": "npm start --prefix client",
-    "server": "nodemon server.js",
+    "server": "node server.js",
     "start": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
