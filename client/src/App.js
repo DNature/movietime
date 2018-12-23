@@ -23,7 +23,12 @@ class App extends Component {
                 exact
                 path="/movie/:title/:id/:index/book"
                 component={Booking}
-                />
+              />
+              <Route
+                exact
+                path="/movie/payment"
+                component={Payment}
+              />
             </Switch>
           </React.Fragment>
         </Router>

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Consumer } from "../../Context";
+import axios from "axios";
 
 class Booking extends Component {
   constructor(props) {
@@ -16,7 +17,11 @@ class Booking extends Component {
       priceInKobo: 10000,
       priceInNaira: 1000,
       basePrice: 1000,
-      screen: "bookscreen"
+      screen: "bookscreen",
+      firstname: "",
+      lastname: "",
+      email: "",
+      phone: ""
     };
   }
 
@@ -59,19 +64,89 @@ class Booking extends Component {
     });
   };
 
+  onInputChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  payForTicket = (title, id, runtime, dispatch) => {
+    return event => {
+      event.preventDefault();
+      axios({
+        method: "post",
+        url: "http://localhost:5000/api/movies/create",
+        data: {
+          title,
+          id,
+          runtime
+        }
+      })
+        .then(res => {
+          console.log(res.data);
+          if (res.data.status === "ok") {
+            const { firstname, lastname, email, phone } = this.state;
+            return axios({
+              method: "post",
+              url: "http://localhost:5000/api/users/create",
+              data: {
+                firstname,
+                lastname,
+                email,
+                phone,
+                prefferedDate: JSON.parse(localStorage.getItem(id))
+                  .prefferedDate,
+                prefferedTime: JSON.parse(localStorage.getItem(id))
+                  .prefferedTime,
+                tickets: this.state.count,
+                movieId: res.data.movie.id
+              }
+            })
+              .then(res => {
+                console.log(res.data);
+                this.setState(
+                  {
+                    firstname: "",
+                    lastname: "",
+                    email: "",
+                    phone: ""
+                  },
+                  () => {
+                    dispatch({
+                      type: "SET_CURRENT_USER",
+                      payload: res.data.user
+                    });
+
+                    localStorage.setItem('currentuser', JSON.stringify(res.data.user))
+                    this.props.history.push(
+                      `/movie/payment`
+                    );
+
+                  }
+                );
+              })
+              .catch(err => console.log("inner http req", err));
+          }
+        })
+        .catch(err => console.log(err));
+    };
+  };
+
   render() {
     //const { title, prefferedDate, prefferedTime, runtime } = this.state;
 
     return (
       <Consumer>
         {value => {
+          const { firstname, lastname, email, phone } = this.state;
+          const { dispatch } = value;
           return (
             <div className="dividdd">
               <div className="lead text-white">
                 {value.movies.map(
                   m =>
                     m.id === parseFloat(this.props.match.params.id) ? (
-                      <div>
+                      <div key={m.id}>
                         <div className="container">
                           <div className="row">
                             <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8 mx-auto mt-4">
@@ -173,19 +248,19 @@ class Booking extends Component {
                                         <div className="right float-right">
                                           <div className="btn-group">
                                             <button
-                                              className="button btn btn-default btn-lg"
+                                              className="button btn btn-secondary btn-lg"
                                               onClick={this.decrement}
                                             >
                                               -
                                             </button>
                                             <div
-                                              className="button btn btn-default btn-lg text-dark"
+                                              className="button btn btn-default bg-dark btn-lg text-light"
                                               style={{ background: "#fff" }}
                                             >
                                               {this.state.count}
                                             </div>
                                             <button
-                                              className="button btn btn-default btn-lg"
+                                              className="button btn btn-secondary btn-lg"
                                               onClick={this.increment}
                                             >
                                               +
@@ -253,7 +328,14 @@ class Booking extends Component {
                                       </div>
                                     </div>
                                     <div className="col-12 mt-4">
-                                      <form onSubmit={this.payForTicket}>
+                                      <form
+                                        onSubmit={this.payForTicket(
+                                          m.title,
+                                          m.id,
+                                          m.runtime,
+                                          dispatch
+                                        )}
+                                      >
                                         <div className="form-group">
                                           <label
                                             style={{
@@ -270,6 +352,8 @@ class Booking extends Component {
                                             name="firstname"
                                             id="firstname"
                                             placeholder="Type your First Name"
+                                            value={firstname}
+                                            onChange={this.onInputChange}
                                           />
                                         </div>
                                         <div className="form-group">
@@ -288,6 +372,8 @@ class Booking extends Component {
                                             name="lastname"
                                             id="lastname"
                                             placeholder="Type your Last Name"
+                                            value={lastname}
+                                            onChange={this.onInputChange}
                                           />
                                         </div>
                                         <div className="form-group">
@@ -306,6 +392,8 @@ class Booking extends Component {
                                             name="email"
                                             id="email"
                                             placeholder="Type your email address"
+                                            value={email}
+                                            onChange={this.onInputChange}
                                           />
                                         </div>
                                         <div className="form-group">
@@ -324,6 +412,8 @@ class Booking extends Component {
                                             name="phone"
                                             id="phone"
                                             placeholder="Type your Phone number"
+                                            value={phone}
+                                            onChange={this.onInputChange}
                                           />
                                         </div>
                                         <input
