@@ -34,7 +34,7 @@ app.use("/api/movies", movies);
 // Server static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder
-  app.use(express.static("client/build"));
+  app.use(express.static("public"));
 
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "public", "index.html"));
