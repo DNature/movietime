@@ -3,43 +3,18 @@ const router = express.Router();
 const uuid = require("uuidv4");
 // Load User model
 const User = require("../../models/User");
+const Seat = require('../../models/Seat');
+const SeatGenerator = require('../../lib/SeatGenerator');
 
-const totalSeats = 500;
-let currentSeat = 1;
-
-
-
-async function getSeatNumbers() {
-  let data = {
-    users: [],
-    errors: []
-  }
-
-  router.get('/', async (req, res) => {
-    User.find({})
-      .then(async user => {
-         data.users = await [...users, user]
-      })
-      .catch(async err => {
-         data.errors = await [...errors, err]
-      })
-  });
-  return await data
+const seatObj = {
+  current: null,
+  capacity: null
 }
 
 // @route   POST api/users/register
 // @desc    Register user
 // @access  Public
 router.post("/create", (req, res) => {
-  // const seats = [
-  //   [1],
-  //   [2, 3, 4],
-  //   [5, 6]
-  // ]
-  // res.send({
-  //   seats: s
-  // })
-
 
   const {
     firstname,
@@ -54,6 +29,20 @@ router.post("/create", (req, res) => {
 
   const bookingCode = String(uuid()).split("-")[0];
 
+  const seat = new Seat({
+    current: 1,
+    capacity: 500
+  })
+
+  seat.save()
+    .then(seat => {
+      const current = seat.current;
+      const capacity = seat.capacity;
+      seatObj.current = current;
+      seatObj.capacity = capacity;
+    })
+    .catch(err => console.log(err))
+
   const user = new User({
     firstname,
     lastname,
@@ -65,6 +54,7 @@ router.post("/create", (req, res) => {
     tickets,
     movieId
   });
+
 
   user.save().then(user => {
     res.status(201).json({

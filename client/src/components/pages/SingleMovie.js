@@ -18,7 +18,7 @@ class SingleMovie extends Component {
       key: "pk_test_fa8cde05629cb0c2cb5e2e1daddd6d01a8b2bdf3", //PAYSTACK PUBLIC KEY
       email: "francis.udejiofficial@gmail.com", // customer email
       amount: 100000, //equals NGN100,
-      prefferedDate: "",
+      prefferedDate: new Date().toDateString().split('T')[0],
       prefferedTime: "",
       title: "",
       poster_path: "",
@@ -272,7 +272,14 @@ class SingleMovie extends Component {
                                 >
                                   Choose a preffered date
                                 </label>
-                                <select
+                                <input
+                                  type="date"
+                                  name="prefferedDate"
+                                  id="exampleFormControlSelect1" className="form-control form-control-lg"
+                                  onChange={this.onInputChange}
+                                  required
+                                />
+                                {/* <select
                                   className="form-control form-control-lg"
                                   id="exampleFormControlSelect1"
                                   name="prefferedDate"
@@ -286,7 +293,7 @@ class SingleMovie extends Component {
                                   <option>Mon, 10 Dec</option>
                                   <option>Tue, 11 Dec</option>
                                   <option>Wed, 12 Dec</option>
-                                </select>
+                                </select> */}
                               </div>
 
                               <div className="form-group">
@@ -308,8 +315,10 @@ class SingleMovie extends Component {
                                   required
                                 >
                                   <option>Choose a preffered time</option>
-                                  <option>5:10 PM</option>
-                                  <option>9:50 PM</option>
+                                  <option>10:00 AM</option>
+                                  <option>1:00 PM</option>
+                                  <option>4:00 PM</option>
+                                  <option>7:00 PM</option>
                                 </select>
                               </div>
                               <input
