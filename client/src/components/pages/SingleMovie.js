@@ -279,21 +279,7 @@ class SingleMovie extends Component {
                                   onChange={this.onInputChange}
                                   required
                                 />
-                                {/* <select
-                                  className="form-control form-control-lg"
-                                  id="exampleFormControlSelect1"
-                                  name="prefferedDate"
-                                  onChange={this.onInputChange}
-                                  required
-                                >
-                                  <option>Choose a preffered date</option>
-                                  <option>Sat, 08 Dec</option>
-                                  <option>Sat, 08 Dec</option>
-                                  <option>Sun, 09 Dec</option>
-                                  <option>Mon, 10 Dec</option>
-                                  <option>Tue, 11 Dec</option>
-                                  <option>Wed, 12 Dec</option>
-                                </select> */}
+
                               </div>
 
                               <div className="form-group">
