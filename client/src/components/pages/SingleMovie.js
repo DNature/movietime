@@ -270,7 +270,7 @@ class SingleMovie extends Component {
                                     fontSize: "1rem"
                                   }}
                                 >
-                                  Choose a preffered date
+                                  Choose a preffered date now
                                 </label>
                                 <input
                                   type="date"
