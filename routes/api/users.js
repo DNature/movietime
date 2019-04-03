@@ -5,6 +5,7 @@ const uuid = require("uuidv4");
 const User = require("../../models/User");
 const Seat = require('../../models/Seat');
 const SeatGenerator = require('../../lib/SeatGenerator');
+const Movie = require("../../models/Movie")
 
 const seatObj = {
   current: null,
@@ -14,7 +15,7 @@ const seatObj = {
 // @route   POST api/users/register
 // @desc    Register user
 // @access  Public
-router.post("/create", (req, res) => {
+router.post("/create", async (req, res) => {
 
   const {
     firstname,
@@ -28,22 +29,33 @@ router.post("/create", (req, res) => {
   } = req.body;
 
   const bookingCode = String(uuid()).split("-")[0];
+  let seatNumber = 0
 
-  const seat = new Seat({
-    current: 1,
-    capacity: 500
-  })
+  await User.find({})
+    .then(users => {
+      const allUsersWithTheSameDateAndTime = []
+      
+      if(users.length === 0) {
+        seatNumber = 1;
+      } else {
+        users.forEach(user => {
+          if(user.prefferedDate === prefferedDate && user.prefferedTime === prefferedTime) {
+            allUsersWithTheSameDateAndTime.push(user)
+          }
+        })
 
-  seat.save()
-    .then(seat => {
-      const current = seat.current;
-      const capacity = seat.capacity;
-      seatObj.current = current;
-      seatObj.capacity = capacity;
+        seatNumber = allUsersWithTheSameDateAndTime.length + 1
+      }
+
+      console.log(seatNumber, 1111111111)
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+    })
 
-  const user = new User({
+    console.log(seatNumber, 222222222)
+
+  const user = await new User({
     firstname,
     lastname,
     email,
@@ -52,11 +64,12 @@ router.post("/create", (req, res) => {
     prefferedDate,
     prefferedTime,
     tickets,
-    movieId
+    movieId,
+    seatNumber
   });
 
 
-  user.save().then(user => {
+  await user.save().then(user => {
     res.status(201).json({
       status: "ok",
       success: true,
@@ -71,7 +84,26 @@ router.post("/create", (req, res) => {
       err
     });
   })
+
+
 });
+
+router.get('/verifyTicket/:ticketId', (req, res) => {
+  const id = req.params.ticketId
+
+  User.find({reference: id})
+    .then(userInfo => {
+      let user = userInfo[0]
+      let movieDetails = null
+      Movie.find({id: user.movieId})
+        .then(movies => {
+          res.status(200).send({success: true, ticket: {user, movieDetails: movies[0]}})
+        })
+    })
+    .catch(err => {
+      res.status(404).json({error: true, message: "Ticket Not found, please book one"})
+    })
+})
 
 router.patch("/update/:id", (req, res) => {
   const { reference } = req.body;
@@ -94,4 +126,13 @@ router.patch("/update/:id", (req, res) => {
     })
 });
 
+router.get('/all', (req, res) => {
+  User.find({})
+    .then(users => {
+      console.log(users)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
 module.exports = router;

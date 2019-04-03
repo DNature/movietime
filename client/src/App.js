@@ -5,7 +5,8 @@ import Home from "./components/pages/Home";
 import SingleMovie from "./components/pages/SingleMovie";
 import Payment from "./components/pages/Payment";
 import Booking from "./components/pages/Booking";
-import { AppProvider } from './/Context'
+import Tickets from './components/pages/Tickets';
+import { AppProvider } from './Context'
 
 class App extends Component {
   render() {
@@ -28,6 +29,11 @@ class App extends Component {
                 exact
                 path="/movie/payment"
                 component={Payment}
+              />
+              <Route 
+                exact
+                path="/tickets/download"
+                component={Tickets}
               />
             </Switch>
           </React.Fragment>

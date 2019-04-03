@@ -6,6 +6,8 @@ import VideoFrame from "../VideoFrame";
 import PaystackButton from "react-paystack";
 import { Consumer } from "../../Context";
 
+import {differenceInCalendarDays} from 'date-fns'
+
 class SingleMovie extends Component {
   constructor(props) {
     super(props);
@@ -106,6 +108,20 @@ class SingleMovie extends Component {
   sendToBookingPage = (dispatch, movie, index) => {
     return event => {
       event.preventDefault();
+
+      const diff = differenceInCalendarDays(new Date().toISOString(), this.state.prefferedDate)
+
+      console.log(diff)
+
+      if(diff > 0) {
+        alert("You cannot go back in time")
+        return
+      }
+
+      if(diff < -30) {
+        alert("You can only book tickets for on or before 30 days interval")
+        return
+      }
 
       const title = String(movie.title)
         .toLowerCase()
@@ -302,9 +318,8 @@ class SingleMovie extends Component {
                                 >
                                   <option>Choose a preffered time</option>
                                   <option>10:00 AM</option>
-                                  <option>1:00 PM</option>
-                                  <option>4:00 PM</option>
-                                  <option>7:00 PM</option>
+                                  <option>2:00 PM</option>
+                                  <option>6:00 PM</option>
                                 </select>
                               </div>
                               <input

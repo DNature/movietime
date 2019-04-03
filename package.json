@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "client": "npm start --prefix client",
-    "server": "node server.js",
+    "server": "nodemon server.js",
     "start": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
@@ -29,6 +29,7 @@
     "uuidv4": "^2.0.0"
   },
   "devDependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.18.10"
   }
 }

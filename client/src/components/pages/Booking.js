@@ -221,15 +221,15 @@ class Booking extends Component {
                                 </div>
                                 {this.state.screen === "bookscreen" ? (
                                   <>
-                                    <div className="row">
+                                    {/* <div className="row">
                                       <div className="col-12">
                                         <p className="text-danger mt-4 mb-3">
                                           SELECT NUMBER OF TICKETS
                                         </p>
                                       </div>
-                                    </div>
+                                    </div> */}
 
-                                    <div className="row">
+                                    {/* <div className="row">
                                       <div className="col-12">
                                         <div className="left float-left">
                                           <p className="text-white mb-0">
@@ -268,7 +268,7 @@ class Booking extends Component {
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    </div> */}
                                   </>
                                 ) : null}
 

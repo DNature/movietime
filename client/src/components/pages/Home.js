@@ -88,9 +88,13 @@ class Home extends Component {
                   <div className="container">
                     <h1>Watch What's Next</h1>
                     <h3>BOOK NOW. WATCH ANYTIME</h3>
-                    <a href="/book" className="btn btn-danger btn-lg">
-                      Book Now
-                    </a>
+                    <div className="btn-group">
+                      <a href="#now-showing" className="btn btn-danger btn-lg">
+                        Get Started
+                      </a>
+                      <Link to="/tickets/download" className="btn btn-light btn-lg">Get Ticket</Link>
+                    </div>
+
                     <br />
                   </div>
                 </div>
@@ -99,7 +103,7 @@ class Home extends Component {
               <main>
                 <section className="section section-3">
                   <div className="header-title">
-                    <h2 className="text-white text-danger text-center py-4">
+                    <h2 className="text-white text-danger text-center py-4" id="now-showing">
                       NOW SHOWING
                     </h2>
                     <hr />

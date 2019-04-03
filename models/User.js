@@ -2,14 +2,6 @@ const mongoose = require("mongoose");
 const timestamps = require('mongoose-timestamp')
 const Schema = mongoose.Schema;
 
-const seatSchema = new Schema({
-  number: {
-    type: Number,
-    required: true,
-    unique: true
-  }
-});
-
 // Create Schema
 const UserSchema = new Schema({
   firstname: {
@@ -51,7 +43,10 @@ const UserSchema = new Schema({
     type: String,
     required: false
   },
-  seats: [seatSchema]
+  seatNumber: {
+    type: String,
+    required: true
+  }
 });
 
 UserSchema.plugin(timestamps)

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PaystackButton from "react-paystack";
-import {Link } from 'react-router-dom'
+import {Link, Redirect } from 'react-router-dom'
 import axios from 'axios'
 
 class Payment extends Component {
@@ -14,7 +14,8 @@ class Payment extends Component {
       basePrice: 100000,
       isBooked: true,
       currentUser: null,
-      hasPaid: false
+      hasPaid: false,
+      redirect: false
     };
   }
 
@@ -52,7 +53,7 @@ class Payment extends Component {
       })
       .then(user => {
         console.log("updated user", user);
-        this.setState({hasPaid: true});
+        this.setState({hasPaid: true, redirect: true});
       })
       .catch(err => console.log("error updating user", err))
     }
@@ -66,15 +67,17 @@ class Payment extends Component {
     //you can put any unique reference implementation code here
     let text = "";
     let possible =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let possible2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-    for (let i = 0; i < 15; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    for (let i = 0; i < 6; i++)
+      text += possible2.charAt(Math.floor(Math.random() * possible2.length));
 
     return text;
   };
 
   render() {
+    if(this.state.redirect) return <Redirect to="/tickets/download" />
     return (
       <div
         style={{
