@@ -14,12 +14,12 @@
     "type": "git",
     "url": "git+https://github.com/francisudeji/movietime.git"
   },
-  "author": "Udeji Francis",
+  "author": "Divine Hycenth",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/francisudeji/movietime/issues"
+    "url": "https://github.com/dnature/movietime/issues"
   },
-  "homepage": "https://github.com/francisudeji/movietime#readme",
+  "homepage": "https://github.com/dnature/movietime#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
